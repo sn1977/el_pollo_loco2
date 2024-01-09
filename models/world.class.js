@@ -9,6 +9,7 @@ class World {
     ctx;
     camera_x = 0;
     throwableObjects = [];
+    pain_sound = new Audio('audio/pain.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -36,6 +37,7 @@ class World {
         this.level.enemies.forEach((enemy) => {
             if (this.character.isColliding(enemy)) {
                 this.character.hit();
+                this.pain_sound.play();
                 // console.log('Energy', this.character.energy);
                 this.statusBarHealth.setPercentage(this.character.energy);
             }
