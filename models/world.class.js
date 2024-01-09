@@ -10,6 +10,8 @@ class World {
     camera_x = 0;
     throwableObjects = [];
     pain_sound = new Audio('audio/pain.mp3');
+    collectingBottle_sound = new Audio('audio/collectingBottle.mp3');
+    collectingCoin_sound = new Audio('audio/collectingCoin.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -30,6 +32,8 @@ class World {
             this.checkThrowObjects();
             this.checkCollisionsBottles();
             this.checkCollisionsCoins();
+            this.checkJumpingOnEnemy();
+            this.refillHealth();
         }, 200);
     }
 
@@ -48,6 +52,7 @@ class World {
         for (let i = this.level.bottles.length - 1; i >= 0; i--) {
             let bottle = this.level.bottles[i];
             if (this.character.isColliding(bottle)) {
+                this.collectingBottle_sound.play();
                 this.statusBarBottle.collectBottle();
                 this.statusBarBottle.setAmountBottles(this.statusBarBottle.amountBottles);
                 this.level.bottles.splice(i, 1);
@@ -59,6 +64,7 @@ class World {
         for (let i = this.level.coins.length - 1; i >= 0; i--) {
             let coin = this.level.coins[i];
             if (this.character.isColliding(coin)) {
+                this.collectingCoin_sound.play();
                 this.statusBarCoin.collectCoins();
                 this.statusBarCoin.setAmountCoins(this.statusBarCoin.amountCoins);
                 this.level.coins.splice(i, 1);
@@ -66,10 +72,32 @@ class World {
         }
     }
 
+    checkJumpingOnEnemy() {
+        this.level.enemies.forEach((enemy, index) => {
+            if (this.character.jumpOnEnemy(enemy)) {
+                enemy.isDead = true;
+                enemy.loadImage('img/3_enemies_chicken/chicken_normal/2_dead/dead.png');
+                this.level.enemies.splice(index, 1);
+                console.log('enemy defeated');
+            }
+        });
+    }
+
     checkThrowObjects() {
-        if (this.keyboard.KEY_D) {
+        if (this.keyboard.KEY_D && this.statusBarBottle.amountBottles > 0) {
             let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
             this.throwableObjects.push(bottle);
+            this.statusBarBottle.amountBottles -= 1;
+            this.statusBarBottle.setAmountBottles(this.statusBarBottle.amountBottles);
+        }
+    }
+
+    refillHealth() {
+        if (this.keyboard.KEY_F && this.statusBarCoin.amountCoins > 0) {
+            this.statusBarCoin.amountCoins -= 1;
+            this.character.energy += 5;
+            this.statusBarCoin.setAmountCoins(this.statusBarCoin.amountCoins);
+            this.statusBarHealth.setPercentage(this.character.energy);
         }
     }
 

@@ -59,7 +59,19 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    jumpOnEnemy(mo) {
+        // Prüft, ob die Unterseite dieses Objekts sich über der Oberseite des Gegners befindet
+        // und ob sich die Oberseite dieses Objekts unterhalb der Mitte des Gegners befindet
+        let isAboveEnemyBottom = this.y + this.height < mo.y + mo.height;
+        let isBelowEnemyMiddle = this.y > mo.y + mo.height / 2;
 
+        // Prüft, ob die linke Seite dieses Objekts sich innerhalb der Breite des Gegners befindet
+        let isWithinEnemyHorizontalBounds =
+            this.x + this.width > mo.x &&
+            this.x < mo.x + mo.width;
+
+        return isAboveEnemyBottom && isBelowEnemyMiddle && isWithinEnemyHorizontalBounds;
+    }
 
     isDead() {
         return this.energy === 0;
