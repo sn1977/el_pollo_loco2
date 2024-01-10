@@ -58,3 +58,4 @@ window.addEventListener('keyup', (event) => {
         keyboard.KEY_F = false;
     }
 });
+

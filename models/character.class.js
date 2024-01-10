@@ -82,6 +82,8 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_JUMPING);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
+        this.loadImages(this.IMAGES_IDLE);
+        this.loadImages(this.IMAGES_LONG_IDLE);
         this.applyGravity();
         this.animate();
     }
@@ -100,18 +102,21 @@ class Character extends MovableObject {
             this.walking_sound.pause();
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.goToSleep = 0;
+                this.sleeping_sound.pause();
                 this.moveRight();
                 this.otherDirection = false;
                 this.walking_sound.play();
             }
             if (this.world.keyboard.LEFT && this.x > 0) {
                 this.goToSleep = 0;
+                this.sleeping_sound.pause();
                 this.moveLeft();
                 this.otherDirection = true;
                 this.walking_sound.play();
             }
-            if (this.world.keyboard.SPACE && !this.isAboveGround()) { // || this.world.keyboard.UP && !this.isAboveGround()
+            if (this.world.keyboard.SPACE && !this.isAboveGround() || this.world.keyboard.UP && !this.isAboveGround()) {
                 this.goToSleep = 0;
+                this.sleeping_sound.pause();
                 this.jump();
                 this.jumping_sound.play();
             }
@@ -138,7 +143,7 @@ class Character extends MovableObject {
 
         setInterval(() => {
             this.goToSleep += 1;
-            // this.characterSleep();
+            this.characterSleep();
         }, 1000);
     }
 }
