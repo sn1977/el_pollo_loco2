@@ -1,6 +1,6 @@
 const layers = [
     'air.png',
-    '3_third_layer/2.png',
+     '3_third_layer/2.png',
     '2_second_layer/2.png',
     '1_first_layer/2.png',
     'air.png',
@@ -30,7 +30,17 @@ for (let i = 0; i < 12; i++) {
     chickenSmall.push(new ChickenSmall());
 }
 
-const enemies = [...chickens, ...chickenSmall, new Endboss()];
+// const enemies = [...chickens, ...chickenSmall, new Endboss()];
+
+
+const clouds = [];
+const totalClouds = 15;
+const xSpacing = 500; // Abstand zwischen den Wolken
+
+for (let i = 0; i < totalClouds; i++) {
+    let xPosition = i * xSpacing;
+    clouds.push(new Cloud(xPosition));
+}
 
 const coins = [];
 for (let i = 0; i < 20; i++) {
@@ -42,10 +52,24 @@ for (let i = 0; i < 20; i++) {
     bottles.push(new Bottle());
 }
 
-const level1 = new Level(
-    enemies,
-    [new Cloud()],
-    backgroundObjects,
-    coins,
-    bottles
-);
+// const level1 = new Level(
+//     enemies,
+//     clouds,
+//     backgroundObjects,
+//     coins,
+//     bottles
+// );
+
+function createLevel1(world) {
+    const endboss = new Endboss(world); // Erstellen des Endbosses mit der World-Referenz
+
+    const enemies = [...chickens, ...chickenSmall, endboss];
+
+    return new Level(
+        enemies,
+        clouds,
+        backgroundObjects,
+        coins,
+        bottles
+    );
+}

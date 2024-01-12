@@ -3,7 +3,7 @@ class World {
     statusBarHealth = new StatusBarHealth();
     statusBarCoin = new StatusBarCoin();
     statusBarBottle = new StatusBarBottle();
-    level = level1;
+    level;
     canvas;
     keyboard;
     ctx;
@@ -17,9 +17,11 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.level = createLevel1(this); // Erstellen des Levels mit der World-Referenz
         this.draw();
         this.setWorld();
         this.run();
+        this.endBossAwake()
     }
 
     setWorld() {
@@ -32,17 +34,17 @@ class World {
             this.checkThrowObjects();
             this.checkCollisionsBottles();
             this.checkCollisionsCoins();
-            this.checkJumpingOnEnemy();
             this.refillHealth();
-        }, 200);
+        }, 50);
     }
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
-            if (this.character.isColliding(enemy)) {
+            if (this.character.isColliding(enemy) && this.character.isAboveGround()) {
+                this.checkJumpingOnEnemy();
+            } else if (this.character.isColliding(enemy)) {
                 this.character.hit();
                 this.pain_sound.play();
-                // console.log('Energy', this.character.energy);
                 this.statusBarHealth.setPercentage(this.character.energy);
             }
         });
@@ -73,15 +75,23 @@ class World {
     }
 
     checkJumpingOnEnemy() {
-        this.level.enemies.forEach((enemy, index) => {
-            if (this.character.jumpOnEnemy(enemy)) {
-                enemy.isDead = true;
-                enemy.loadImage('img/3_enemies_chicken/chicken_normal/2_dead/dead.png');
-                this.level.enemies.splice(index, 1);
-                console.log('enemy defeated');
+        this.level.enemies.forEach((enemy) => {
+            if (this.character.isColliding(enemy) && this.character.isAboveGround()) {
+                if (enemy instanceof Chicken || enemy instanceof ChickenSmall) {
+                    enemy.isDead = true;
+                    // Verwenden Sie eine Closure, um das aktuelle Enemy-Objekt zu erfassen
+                    setTimeout(() => {
+                        const enemyIndex = this.level.enemies.indexOf(enemy);
+                        if (enemyIndex > -1) {
+                            this.level.enemies.splice(enemyIndex, 1); // Entfernen des Feindes an der gefundenen Indexposition
+                        }
+                    }, 1000); // Verzögerung von 1000 Millisekunden (1 Sekunde)
+                    console.log('enemy defeated');
+                }
             }
         });
     }
+
 
     checkThrowObjects() {
         if (this.keyboard.KEY_D && this.statusBarBottle.amountBottles > 0) {
@@ -103,29 +113,36 @@ class World {
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Verschiebt den Canvas, um die Kamerabewegung zu simulieren
         this.ctx.translate(this.camera_x, 0);
+
+        // Zeichnet Hintergrundobjekte
         this.addObjectsToMap(this.level.backgroundObjects);
 
-        this.ctx.translate(-this.camera_x, 0);
-        //---------- Space for fixed objects -----------//
-        this.addToMap(this.statusBarBottle);
-        this.addToMap(this.statusBarHealth);
-        this.addToMap(this.statusBarCoin);
-        this.ctx.translate(this.camera_x, 0);
-
-        this.addToMap(this.character);
-        this.addObjectsToMap(this.level.enemies);
+        // Zeichnet bewegliche Objekte
         this.addObjectsToMap(this.level.clouds);
+        this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.coins);
+        this.addToMap(this.character);
+
+        // Setzt die Übersetzung zurück, bevor feste Objekte gezeichnet werden
         this.ctx.translate(-this.camera_x, 0);
 
+        // Zeichnet feste Objekte (Statusleisten) über anderen Objekten
+        this.addToMap(this.statusBarBottle);
+        this.addToMap(this.statusBarHealth);
+        this.addToMap(this.statusBarCoin);
+
+        // Fordert den nächsten Frame der Animation an
         let self = this;
         requestAnimationFrame(function () {
             self.draw();
         });
     }
+
 
     addObjectsToMap(objects) {
         objects.forEach(object => {
@@ -155,4 +172,10 @@ class World {
         mo.x = mo.x * -1;
         this.ctx.restore();
     }
+
+    endBossAwake() {
+
+
+    }
+
 }
