@@ -63,7 +63,7 @@ for (let i = 0; i < 20; i++) {
 function createLevel1(world) {
     const endboss = new Endboss(world); // Erstellen des Endbosses mit der World-Referenz
 
-    const enemies = [...chickens, ...chickenSmall, endboss];
+    const enemies = [endboss]; // ...chickens, ...chickenSmall,
 
     return new Level(
         enemies,

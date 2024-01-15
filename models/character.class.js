@@ -146,24 +146,5 @@ class Character extends MovableObject {
             this.characterSleep();
         }, 1000);
     }
-
-    jumpOnEnemy(enemy) {
-        if (!this.isAboveGround()) {
-            // Der Charakter ist nicht in der Luft, also kann er nicht auf den Feind springen.
-            return false;
-        }
-
-        const characterBottom = this.y + this.height;
-        const enemyTop = enemy.y;
-        const isVerticallyAligned = characterBottom >= enemyTop && this.y < enemyTop;
-
-        const characterLeft = this.x;
-        const characterRight = this.x + this.width;
-        const enemyLeft = enemy.x;
-        const enemyRight = enemy.x + enemy.width;
-        const isHorizontallyAligned = characterRight > enemyLeft && characterLeft < enemyRight;
-
-        return isVerticallyAligned && isHorizontallyAligned;
-    }
 }
 

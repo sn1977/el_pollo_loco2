@@ -3,6 +3,7 @@ class World {
     statusBarHealth = new StatusBarHealth();
     statusBarCoin = new StatusBarCoin();
     statusBarBottle = new StatusBarBottle();
+    statusBarEndBoss = new StatusBarEndboss();
     level;
     canvas;
     keyboard;
@@ -21,7 +22,6 @@ class World {
         this.draw();
         this.setWorld();
         this.run();
-        this.endBossAwake()
     }
 
     setWorld() {
@@ -35,17 +35,20 @@ class World {
             this.checkCollisionsBottles();
             this.checkCollisionsCoins();
             this.refillHealth();
-        }, 50);
+            this.checkBottleOnEnemy();
+        }, 60);
     }
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
-            if (this.character.isColliding(enemy) && this.character.isAboveGround()) {
-                this.checkJumpingOnEnemy();
-            } else if (this.character.isColliding(enemy)) {
-                this.character.hit();
-                this.pain_sound.play();
-                this.statusBarHealth.setPercentage(this.character.energy);
+            if (this.character.isColliding(enemy) && !enemy.isDead && !this.character.isHurt()) {
+                if (this.character.isAboveGround()) {
+                    this.checkJumpingOnEnemy();
+                } else {
+                    this.character.hit();
+                    this.pain_sound.play();
+                    this.statusBarHealth.setPercentage(this.character.energy);
+                }
             }
         });
     }
@@ -74,12 +77,43 @@ class World {
         }
     }
 
+    checkBottleOnEnemy() {
+        this.level.enemies.forEach((enemy) => {
+            this.throwableObjects.forEach((bottle) => {
+                if (bottle.isColliding(enemy)) {
+                    if (enemy instanceof Chicken || enemy instanceof ChickenSmall) {
+                        enemy.isDead = true;
+                        setTimeout(() => {
+                            const enemyIndex = this.level.enemies.indexOf(enemy);
+                            if (enemyIndex > -1) {
+                                this.level.enemies.splice(enemyIndex, 1);
+                            }
+                        }, 1000);
+                    } else if (enemy instanceof Endboss && !enemy.isHurt()) {
+                        enemy.hit(); // Reduziert die Energie des Endbosses
+                        this.statusBarEndBoss.setPercentage(enemy.energy);
+                        console.log(enemy.energy);
+                        bottle.hitEndboss();
+                        enemy.playAnimation(enemy.IMAGES_HURT);
+                    }
+                    // Entfernen Sie die Flasche, sobald die Splash-Animation abgeschlossen ist
+                    if (!bottle.isSplashing) {
+                        const bottleIndex = this.throwableObjects.indexOf(bottle);
+                        if (bottleIndex > -1) {
+                            this.throwableObjects.splice(bottleIndex, 1);
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+
     checkJumpingOnEnemy() {
         this.level.enemies.forEach((enemy) => {
             if (this.character.isColliding(enemy) && this.character.isAboveGround()) {
                 if (enemy instanceof Chicken || enemy instanceof ChickenSmall) {
                     enemy.isDead = true;
-                    // Verwenden Sie eine Closure, um das aktuelle Enemy-Objekt zu erfassen
                     setTimeout(() => {
                         const enemyIndex = this.level.enemies.indexOf(enemy);
                         if (enemyIndex > -1) {
@@ -135,6 +169,7 @@ class World {
         this.addToMap(this.statusBarBottle);
         this.addToMap(this.statusBarHealth);
         this.addToMap(this.statusBarCoin);
+        this.addToMap(this.statusBarEndBoss);
 
         // Fordert den nächsten Frame der Animation an
         let self = this;
@@ -171,11 +206,6 @@ class World {
     flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();
-    }
-
-    endBossAwake() {
-
-
     }
 
 }

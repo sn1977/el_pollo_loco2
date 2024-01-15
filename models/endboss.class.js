@@ -2,7 +2,8 @@ class Endboss extends MovableObject {
     y = 25;
     height = 430;
     width = 330;
-    firstContact = false;
+    energy = 30;
+    isDead = false;
 
     IMAGES_WALKING = [
         'img/4_enemie_boss_chicken/1_walk/G1.png',
@@ -41,8 +42,8 @@ class Endboss extends MovableObject {
 
     IMAGES_DEAD = [
         'img/4_enemie_boss_chicken/5_dead/G24.png',
-        'img/4_enemie_boss_chicken/5_dead/G24.png',
-        'img/4_enemie_boss_chicken/5_dead/G24.png'
+        'img/4_enemie_boss_chicken/5_dead/G25.png',
+        'img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
     constructor(world) {
@@ -54,10 +55,8 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_ATTACK);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
-        this.speed = 0.15 + 0.5;
+        this.speed = 5;
         this.x = 4600;
-
-        // this.firstContactToEndboss();
         this.animate();
     }
 
@@ -65,38 +64,30 @@ class Endboss extends MovableObject {
         return Math.abs(this.x - this.world.character.x) < distance;
     }
 
-    update() {
-        if (this.world) {
-            const characterX = this.world.character.x;
-            const distanceToCharacter = this.x - characterX;
-
-            if (Math.abs(distanceToCharacter) < 400) { // Verfolgt den Charakter, wenn er weniger als 400px entfernt ist
-                if (distanceToCharacter > 0) { // Wenn der Endboss rechts vom Charakter ist
-                    this.moveLeft();
-                }
+    chasingCharacter() {
+        if (this.world && this.distanceToEndboss(400)) {
+            // this.playAnimation(this.IMAGES_WALKING);
+            this.playAnimation(this.IMAGES_ATTACK);
+            if (this.x - this.world.character.x > 0) { // Wenn der Endboss rechts vom Charakter ist
+                this.moveLeft();
+                this.otherDirection = false; // Bild spiegeln
+            } else {
+                this.moveRight();
+                this.otherDirection = true; // Bild nicht spiegeln
             }
         }
     }
 
-    chasingCharacter() {
-        setInterval(() => {
-            this.playAnimation(this.IMAGES_WALKING);
-            this.moveLeft();
-        }, 200);
-    }
-
     animate() {
         setInterval(() => {
-            if (this.world && this.distanceToEndboss(450) && !this.firstContact) {
+            if (this.energy === 0) {
+                this.isDead = true;
+                this.playAnimation(this.IMAGES_DEAD);
+            } else if (this.world && this.distanceToEndboss(450) && !this.distanceToEndboss(400) && !this.isDead) {
                 this.playAnimation(this.IMAGES_ALERT);
-                setTimeout(() => {
-                    this.playAnimation(this.IMAGES_WALKING);
-                }, 3000);
+            } else if (!this.isDead){
                 this.chasingCharacter();
-            } else if (this.firstContact === true) {
-                // Optional: Andere Logik, wenn der erste Kontakt bereits stattgefunden hat
             }
         }, 200);
-
     }
 }

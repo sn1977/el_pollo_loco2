@@ -15,6 +15,7 @@ class ThrowableObject extends MovableObject {
     ];
     hasHitGround = false;
     brokenGlass_sound = new Audio('audio/brokenBottle.mp3');
+    isSplashing = false;
 
     constructor(x, y) {
         super().loadImage(this.IMAGES_BOTTLE_ROTATION[0]);
@@ -50,10 +51,13 @@ class ThrowableObject extends MovableObject {
     }
 
     animateBottleSplash() {
-
             setInterval(() => {
                 this.playAnimation(this.IMAGES_BOTTLE_SPLASH);
             }, 25);
         }
 
+    hitEndboss() {
+        this.isSplashing = true;
+        this.animateBottleSplash();
+    }
 }
