@@ -59,3 +59,21 @@ window.addEventListener('keyup', (event) => {
     }
 });
 
+function toggleInstructions(id) {
+    let element = document.getElementById(id);
+    let startScreen = document.getElementById('start-screen');
+    let gameControl = document.getElementById('game-control');
+
+    if (element.classList.contains('d-none')) {
+        element.classList.remove('d-none');
+        element.style.display = "flex";
+        startScreen.classList.add('d-none');
+        gameControl.classList.add('d-none');
+    } else {
+        element.classList.add('d-none');
+        element.style.display = "none";
+        startScreen.classList.remove('d-none');
+        gameControl.classList.remove('d-none');
+    }
+}
+

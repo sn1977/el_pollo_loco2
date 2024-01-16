@@ -33,23 +33,89 @@
     <div id="canvas-wrapper">
         <div id="start-screen"></div>
         <div id="game-control" class="control-buttons">
-            <div class="control-icons">
+            <div class="control-icons" onclick="toggleInstructions('chronicals')">
                 <img src="img/9_intro_outro_screens/start/questionmark.png" alt="storyOfGame">
+                <p>Chronicle</p>
             </div>
-            <div class="control-icons">
+            <div class="control-icons" onclick="toggleInstructions('controls')">
                 <img src="img/9_intro_outro_screens/start/black-gaming-console.png" alt="controlKeysOfGame">
+                <p>Controls</p>
             </div>
             <div class="control-icons">
                 <img src="img/9_intro_outro_screens/start/play.png" alt="startGame">
+                <p>Play Game</p>
             </div>
         </div>
         <canvas id="canvas" width="720" height="480"></canvas>
         <div id="full-screen">
             <div class="control-icons">
                 <img src="img/9_intro_outro_screens/start/sound-off.png" alt="soundOffButton">
+                <p>Mute</p>
             </div>
             <div class="control-icons">
-                <img src="img/9_intro_outro_screens/start/resize-arrows.png" alt="fullScreenButton">
+                <img class="full-screen-icon" src="img/9_intro_outro_screens/start/resize-arrows.png"
+                     alt="fullScreenButton">
+                <p>Full Screen</p>
+            </div>
+        </div>
+        <div class="d-none instructions" id="chronicals">
+            <div class="inner-distance" onclick="toggleInstructions('chronicals')">
+                <h2>Pepe's Epic Quest: The Poultry Rebellion</h2>
+                <h3>In the vibrant world of "El Pollo Loco," a classic 2D adventure, Pepe embarks on an epic quest.
+                    A strange mutation has afflicted the local chickens, transforming them into fierce opponents under
+                    the leadership of a giant, mutated rooster. As the last hope for humanity, Pepe must navigate
+                    through
+                    treacherous lands, confronting these rebellious birds.<br><br>
+
+                    Armed with his wits and salsa bottles, Pepe's journey is fraught with danger and discovery. These
+                    bottles, essential for his survival, can be obtained by collecting coins scattered throughout his
+                    path.
+                    He uses them strategically to defeat the more formidable mutated chicks, as simple jumps are
+                    ineffective against these tougher foes.<br><br>
+
+                    The climax of Pepe's adventure leads to a dramatic showdown with the colossal rooster, the
+                    mastermind
+                    of the poultry uprising. Only through skillful dodging and precise throws of his salsa bottles can
+                    Pepe hope to triumph. <br><br>
+
+                    Victory promises not just the restoration of peace but also a sweet reunion with his beloved
+                    Senorita,
+                    celebrating their love in the tranquility that follows the turmoil. Join Pepe on this thrilling
+                    journey, where courage and salsa bottles pave the way to harmony and love.
+                </h3>
+                <img src="img/9_intro_outro_screens/start/close.png" alt="close" class="close-icon">
+            </div>
+        </div>
+        <div class="d-none instructions" id="controls">
+            <div class="inner-distance" onclick="toggleInstructions('controls')">
+                <div class="explanation-icons">
+                    <img src="img/9_intro_outro_screens/start/left-arrow.png" alt="left">
+                    <h2>Left</h2>
+                </div>
+                <div class="explanation-icons">
+                    <img src="img/9_intro_outro_screens/start/right-arrow.png" alt="right">
+                    <h2>Right</h2>
+                </div>
+                <div class="explanation-icons">
+                    <div class="option-2keys">
+                    <img src="img/9_intro_outro_screens/start/up-arrow.png" alt="spaceKey">
+                        <h2>& Space</h2>
+                    </div>
+                    <h2>Jump</h2>
+                </div>
+                <div class="explanation-icons">
+                    <img src="img/9_intro_outro_screens/start/letter-d.png" alt="letterD">
+                    <h2>Throw Bottles</h2>
+                </div>
+                <div class="explanation-icons">
+                    <img src="img/9_intro_outro_screens/start/letter-f.png" alt="letterF">
+                    <h2>Refill Energy Pepe</h2>
+                </div>
+                <div class="explanation-icons">
+                    <img src="img/9_intro_outro_screens/start/resize-arrows.png" alt="fullScreen" class="full-screen-icon">
+                    <h2>Full Screen</h2>
+                </div>
+                <img src="img/9_intro_outro_screens/start/close.png" alt="close" class="close-icon">
             </div>
         </div>
     </div>
