@@ -128,6 +128,18 @@ function toggleMuteAllSounds() {
     world.character.sleeping_sound.muted = isMuted;
     brokenGlass_sound.muted = isMuted;
     game_sound.muted = isMuted;
+
+    // Umschalten der Sichtbarkeit der Icons
+    let muteIcon = document.getElementById('muteIcon');
+    let volumeIcon = document.getElementById('volumeIcon');
+
+    if (isMuted) {
+        muteIcon.classList.add('d-none');
+        volumeIcon.classList.remove('d-none');
+    } else {
+        muteIcon.classList.remove('d-none');
+        volumeIcon.classList.add('d-none');
+    }
 }
 
 function startGame() {
@@ -135,6 +147,7 @@ function startGame() {
     let startScreen = document.getElementById('start-screen');
     let gameControl = document.getElementById('game-control');
     let muteIcon = document.getElementById('muteIcon');
+
     startScreen.classList.add('d-none');
     gameControl.classList.add('d-none');
     muteIcon.classList.remove('d-none');
