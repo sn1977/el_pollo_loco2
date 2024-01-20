@@ -36,7 +36,7 @@ class DrawableObject {
 
     }
 
-    drawFrame(ctx) {
+    // drawFrame(ctx) {
         // if (this instanceof Chicken || this instanceof Character || this instanceof ChickenSmall || this instanceof Bottle || this instanceof Coin) {
         //     ctx.beginPath();
         //     ctx.lineWidth = '5';
@@ -44,14 +44,14 @@ class DrawableObject {
         //     ctx.rect(this.x, this.y, this.width, this.height);
         //     ctx.stroke();
         // }
-        if (this instanceof Chicken || this instanceof Character || this instanceof ChickenSmall) {
-            ctx.beginPath();
-            ctx.lineWidth = '3';
-            ctx.strokeStyle = 'red'; // Andere Farbe für den Offset-Rahmen
-            ctx.rect(this.x + this.offset.left, this.y + this.offset.top,
-                this.width - this.offset.right - this.offset.left,
-                this.height - this.offset.bottom - this.offset.top);
-            ctx.stroke();
-        }
-    }
+//         if (this instanceof Chicken || this instanceof Character || this instanceof ChickenSmall) {
+//             ctx.beginPath();
+//             ctx.lineWidth = '3';
+//             ctx.strokeStyle = 'red'; // Andere Farbe für den Offset-Rahmen
+//             ctx.rect(this.x + this.offset.left, this.y + this.offset.top,
+//                 this.width - this.offset.right - this.offset.left,
+//                 this.height - this.offset.bottom - this.offset.top);
+//             ctx.stroke();
+//         }
+//     }
 }

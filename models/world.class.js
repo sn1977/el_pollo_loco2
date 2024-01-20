@@ -13,6 +13,8 @@ class World {
     pain_sound = new Audio('audio/pain.mp3');
     collectingBottle_sound = new Audio('audio/collectingBottle.mp3');
     collectingCoin_sound = new Audio('audio/collectingCoin.mp3');
+    chickenDead_sound = new Audio('audio/chickenDead.mp3');
+    smallChickenDead_sound = new Audio('audio/smallChickenDead.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -81,18 +83,17 @@ class World {
         this.level.enemies.forEach((enemy) => {
             this.throwableObjects.forEach((bottle) => {
                 if (bottle.isColliding(enemy)) {
-                    if (enemy instanceof Chicken || enemy instanceof ChickenSmall) {
+                    if (enemy instanceof Chicken) {
                         enemy.isDead = true;
-                        setTimeout(() => {
-                            const enemyIndex = this.level.enemies.indexOf(enemy);
-                            if (enemyIndex > -1) {
-                                this.level.enemies.splice(enemyIndex, 1);
-                            }
-                        }, 1000);
+                        this.chickenDead_sound.play();
+                        this.removeEnemyAfterDelay(enemy);
+                    } else if (enemy instanceof ChickenSmall) {
+                        enemy.isDead = true;
+                        this.smallChickenDead_sound.play(); // Abspielen des Sounds für kleine Hühner
+                        this.removeEnemyAfterDelay(enemy);
                     } else if (enemy instanceof Endboss && !enemy.isHurt()) {
                         enemy.hit(); // Reduziert die Energie des Endbosses
                         this.statusBarEndBoss.setPercentage(enemy.energy);
-                        console.log(enemy.energy);
                         bottle.hitEndboss();
                         enemy.playAnimation(enemy.IMAGES_HURT);
                     }
@@ -112,18 +113,27 @@ class World {
     checkJumpingOnEnemy() {
         this.level.enemies.forEach((enemy) => {
             if (this.character.isColliding(enemy) && this.character.isAboveGround()) {
-                if (enemy instanceof Chicken || enemy instanceof ChickenSmall) {
+                if (enemy instanceof Chicken) {
                     enemy.isDead = true;
-                    setTimeout(() => {
-                        const enemyIndex = this.level.enemies.indexOf(enemy);
-                        if (enemyIndex > -1) {
-                            this.level.enemies.splice(enemyIndex, 1); // Entfernen des Feindes an der gefundenen Indexposition
-                        }
-                    }, 1000); // Verzögerung von 1000 Millisekunden (1 Sekunde)
-                    console.log('enemy defeated');
+                    this.chickenDead_sound.play(); // Abspielen des Sounds für normale Hühner
+                    this.removeEnemyAfterDelay(enemy);
+                } else if (enemy instanceof ChickenSmall) {
+                    enemy.isDead = true;
+                    this.smallChickenDead_sound.play(); // Abspielen des Sounds für kleine Hühner
+                    this.removeEnemyAfterDelay(enemy);
+                    console.log('Small Chicken defeated');
                 }
             }
         });
+    }
+
+    removeEnemyAfterDelay(enemy) {
+        setTimeout(() => {
+            const enemyIndex = this.level.enemies.indexOf(enemy);
+            if (enemyIndex > -1) {
+                this.level.enemies.splice(enemyIndex, 1); // Entfernen des Feindes an der gefundenen Indexposition
+            }
+        }, 1000); // Verzögerung von 1000 Millisekunden (1 Sekunde)
     }
 
 
@@ -190,7 +200,7 @@ class World {
             this.flipImage(mo);
         }
         mo.draw(this.ctx);
-        mo.drawFrame(this.ctx);
+        // mo.drawFrame(this.ctx);
         if (mo.otherDirection) {
             this.flipImageBack(mo);
         }

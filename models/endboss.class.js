@@ -4,6 +4,8 @@ class Endboss extends MovableObject {
     width = 330;
     energy = 30;
     isDead = false;
+    firstContact = false;
+    i = 0;
 
     IMAGES_WALKING = [
         'img/4_enemie_boss_chicken/1_walk/G1.png',
@@ -66,8 +68,17 @@ class Endboss extends MovableObject {
 
     chasingCharacter() {
         if (this.world && this.distanceToEndboss(400)) {
-            // this.playAnimation(this.IMAGES_WALKING);
-            this.playAnimation(this.IMAGES_ATTACK);
+            if (this.i < 10) {
+                this.playAnimation(this.IMAGES_WALKING);
+            } else {
+                this.playAnimation(this.IMAGES_ATTACK);
+            }
+            this.i++;
+            if (this.world.character.x < 4150 && !this.firstContact) {
+                this.i = 0;
+                this.firstContact = true;
+            }
+
             if (this.x - this.world.character.x > 0) { // Wenn der Endboss rechts vom Charakter ist
                 this.moveLeft();
                 this.otherDirection = false; // Bild spiegeln
@@ -82,10 +93,11 @@ class Endboss extends MovableObject {
         setInterval(() => {
             if (this.energy === 0) {
                 this.isDead = true;
+                wonGame();
                 this.playAnimation(this.IMAGES_DEAD);
             } else if (this.world && this.distanceToEndboss(450) && !this.distanceToEndboss(400) && !this.isDead) {
                 this.playAnimation(this.IMAGES_ALERT);
-            } else if (!this.isDead){
+            } else if (!this.isDead) {
                 this.chasingCharacter();
             }
         }, 200);

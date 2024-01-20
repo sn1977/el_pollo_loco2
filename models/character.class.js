@@ -129,6 +129,7 @@ class Character extends MovableObject {
                 this.goToSleep = 0;
             } else if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
+                lostGame();
                 this.goToSleep = 0;
             } else if (this.isAboveGround()) {
                 this.playAnimation(this.IMAGES_JUMPING);
