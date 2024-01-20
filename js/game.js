@@ -134,8 +134,10 @@ function startGame() {
     isGameStarted = true;
     let startScreen = document.getElementById('start-screen');
     let gameControl = document.getElementById('game-control');
+    let muteIcon = document.getElementById('muteIcon');
     startScreen.classList.add('d-none');
     gameControl.classList.add('d-none');
+    muteIcon.classList.remove('d-none');
 
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
