@@ -14,7 +14,6 @@ class ThrowableObject extends MovableObject {
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png'
     ];
     hasHitGround = false;
-    brokenGlass_sound = new Audio('audio/brokenBottle.mp3');
     isSplashing = false;
 
     constructor(x, y) {
@@ -37,7 +36,7 @@ class ThrowableObject extends MovableObject {
                 this.x += 10;
             }
             if (this.y >= 300 && !this.hasHitGround) {
-                this.brokenGlass_sound.play();
+                brokenGlass_sound.play();
                 this.animateBottleSplash();
                 this.hasHitGround = true; // Verhindert wiederholte Animationen
             }
@@ -51,10 +50,10 @@ class ThrowableObject extends MovableObject {
     }
 
     animateBottleSplash() {
-            setInterval(() => {
-                this.playAnimation(this.IMAGES_BOTTLE_SPLASH);
-            }, 25);
-        }
+        setInterval(() => {
+            this.playAnimation(this.IMAGES_BOTTLE_SPLASH);
+        }, 25);
+    }
 
     hitEndboss() {
         this.isSplashing = true;

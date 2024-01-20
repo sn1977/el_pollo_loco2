@@ -2,7 +2,9 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let game_sound = new Audio('audio/gameMusic.mp3');
+let brokenGlass_sound = new Audio('audio/brokenBottle.mp3');
 let isGameStarted = false;
+let isMuted = false;
 
 function init() {
 
@@ -114,17 +116,18 @@ function toggleInstructions(id) {
     }
 }
 
-function muteAllSounds() {
-    world.pain_sound.muted = true;
-    world.collectingBottle_sound.muted = true;
-    world.collectingCoin_sound.muted = true;
-    world.chickenDead_sound.muted = true;
-    world.smallChickenDead_sound.muted = true;
-    world.character.walking_sound.muted = true;
-    world.character.jumping_sound.muted = true;
-    world.character.sleeping_sound.muted = true;
-    world.character.brokenGlass_sound.muted = true;
-    game_sound.muted = true;
+function toggleMuteAllSounds() {
+    isMuted = !isMuted;
+    world.pain_sound.muted = isMuted;
+    world.collectingBottle_sound.muted = isMuted;
+    world.collectingCoin_sound.muted = isMuted;
+    world.chickenDead_sound.muted = isMuted;
+    world.smallChickenDead_sound.muted = isMuted;
+    world.character.walking_sound.muted = isMuted;
+    world.character.jumping_sound.muted = isMuted;
+    world.character.sleeping_sound.muted = isMuted;
+    brokenGlass_sound.muted = isMuted;
+    game_sound.muted = isMuted;
 }
 
 function startGame() {
