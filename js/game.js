@@ -5,6 +5,7 @@ let game_sound = new Audio('audio/gameMusic.mp3');
 let brokenGlass_sound = new Audio('audio/brokenBottle.mp3');
 let isGameStarted = false;
 let isMuted = false;
+let fullScreen = false;
 
 function init() {
 
@@ -173,6 +174,7 @@ function wonGame() {
 }
 
 function enterFullscreen() {
+    fullScreen = !fullScreen;
     let element;
 
     // Überprüfen des Spielstatus, um das Ziel für den Vollbildmodus zu bestimmen
@@ -190,14 +192,40 @@ function enterFullscreen() {
     } else if (element.msRequestFullscreen) { // IE11
         element.msRequestFullscreen();
     }
+
+    // Umschalten der Sichtbarkeit der Icons
+    let enterFullscreen = document.getElementById('enterFullscreen');
+    let exitFullscreen = document.getElementById('exitFullscreen');
+
+    if (fullScreen) {
+        enterFullscreen.classList.add('d-none');
+        exitFullscreen.classList.remove('d-none');
+    } else {
+        enterFullscreen.classList.remove('d-none');
+        exitFullscreen.classList.add('d-none');
+    }
 }
 
-// function closeFullscreen() {
-//     if (document.exitFullscreen) {
-//         document.exitFullscreen();
-//     } else if (document.webkitExitFullscreen) { /* Safari */
-//         document.webkitExitFullscreen();
-//     } else if (document.msExitFullscreen) { /* IE11 */
-//         document.msExitFullscreen();
-//     }
-// }
+function closeFullscreen() {
+    fullScreen = !fullScreen;
+
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) { /* Safari */
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { /* IE11 */
+        document.msExitFullscreen();
+    }
+
+    // Umschalten der Sichtbarkeit der Icons
+    let enterFullscreen = document.getElementById('enterFullscreen');
+    let exitFullscreen = document.getElementById('exitFullscreen');
+
+    if (fullScreen) {
+        enterFullscreen.classList.add('d-none');
+        exitFullscreen.classList.remove('d-none');
+    } else {
+        enterFullscreen.classList.remove('d-none');
+        exitFullscreen.classList.add('d-none');
+    }
+}

@@ -56,10 +56,15 @@
                 <img src="img/9_intro_outro_screens/start/sound-on.png" alt="soundOnButton">
                 <p>Sound</p>
             </div>
-            <div class="control-icons" onclick="enterFullscreen()">
+            <div  id="enterFullscreen" class="control-icons" onclick="enterFullscreen()">
                 <img class="full-screen-icon" src="img/9_intro_outro_screens/start/resize-arrows.png"
                      alt="fullScreenButton">
                 <p>Full Screen</p>
+            </div>
+            <div  id="exitFullscreen" class="control-icons d-none" onclick="closeFullscreen()">
+                <img class="full-screen-icon" src="img/9_intro_outro_screens/start/minimize.png"
+                     alt="fullScreenButton">
+                <p>Exit Full Screen</p>
             </div>
         </div>
         <div class="d-none instructions" id="chronicals">
