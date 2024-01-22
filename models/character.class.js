@@ -93,12 +93,12 @@ class Character extends MovableObject {
             this.playAnimation(this.IMAGES_IDLE);
         } else {
             this.playAnimation(this.IMAGES_LONG_IDLE);
-            // this.sleeping_sound.play();
+            this.sleeping_sound.play();
         }
     }
 
     animate() {
-        setInterval(() => {
+        setStoppableInterval(() => {
             this.walking_sound.pause();
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.goToSleep = 0;
@@ -122,8 +122,9 @@ class Character extends MovableObject {
             }
             this.world.camera_x = -this.x + 100;
         }, 1000 / 60);
+        // addInterval(movementIntervalId); // Hinzufügen des Intervalls zum globalen Array
 
-        setInterval(() => {
+        setStoppableInterval(() => {
             if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
                 this.goToSleep = 0;
@@ -141,11 +142,13 @@ class Character extends MovableObject {
                 }
             }
         }, 50);
+        // addInterval(animationIntervalId); // Hinzufügen des Intervalls zum globalen Array
 
-        setInterval(() => {
+        setStoppableInterval(() => {
             this.goToSleep += 1;
             this.characterSleep();
         }, 1000);
+        // addInterval(sleepIntervalId); // Hinzufügen des Intervalls zum globalen Array
     }
 }
 

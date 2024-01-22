@@ -22,8 +22,9 @@ class Bottle extends MovableObject {
     }
 
     animate() {
-        setInterval(() => {
+        setStoppableInterval(() => {
             this.playAnimation(this.IMAGES_BOTTLE_ROTATION);
         }, 200);
+        // addInterval(intervalId); // Hinzufügen des Intervalls zum globalen Array
     }
 }

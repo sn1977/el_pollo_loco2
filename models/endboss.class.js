@@ -90,7 +90,7 @@ class Endboss extends MovableObject {
     }
 
     animate() {
-        setInterval(() => {
+        setStoppableInterval(() => {
             if (this.energy === 0) {
                 this.isDead = true;
                 wonGame();
@@ -101,5 +101,6 @@ class Endboss extends MovableObject {
                 this.chasingCharacter();
             }
         }, 200);
+        // addInterval(intervalId);
     }
 }

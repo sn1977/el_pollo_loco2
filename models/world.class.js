@@ -31,7 +31,7 @@ class World {
     }
 
     run() {
-        setInterval(() => {
+        setStoppableInterval(() => {
             this.checkCollisions();
             this.checkThrowObjects();
             this.checkCollisionsBottles();
@@ -39,6 +39,7 @@ class World {
             this.refillHealth();
             this.checkBottleOnEnemy();
         }, 60);
+        // addInterval(intervalId);
     }
 
     checkCollisions() {
@@ -112,7 +113,7 @@ class World {
 
     checkJumpingOnEnemy() {
         this.level.enemies.forEach((enemy) => {
-            if (this.character.isColliding(enemy) && this.character.isAboveGround()) {
+            if (this.character.isColliding(enemy) && this.character.isAboveGround() && this.character.isFalling()) {
                 if (enemy instanceof Chicken) {
                     enemy.isDead = true;
                     this.chickenDead_sound.play(); // Abspielen des Sounds für normale Hühner
@@ -154,6 +155,14 @@ class World {
             this.statusBarHealth.setPercentage(this.character.energy);
         }
     }
+
+    reset() {
+        // // Setzen Sie hier alle notwendigen Eigenschaften zurück
+        // this.character = new Character();
+        // Setzen Sie alle anderen Eigenschaften zurück, die zurückgesetzt werden müssen
+        this.level = createLevel1(this);
+    }
+
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);

@@ -7,12 +7,13 @@ class MovableObject extends DrawableObject {
     lastHit = 0;
 
     applyGravity() {
-        setInterval(() => {
+        setStoppableInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             }
         }, 1000 / 25);
+        // addInterval(intervalId);
     }
 
     isAboveGround() {
@@ -40,6 +41,10 @@ class MovableObject extends DrawableObject {
 
     jump() {
         this.speedY = 30;
+    }
+
+    isFalling(){
+        return this.speedY < 0;
     }
 
     isColliding(mo) {

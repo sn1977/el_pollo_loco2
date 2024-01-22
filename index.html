@@ -7,6 +7,7 @@
     <title>El Pollo Loco</title>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="img/4_enemie_boss_chicken/1_walk/G1.png" type="image/x-icon">
+
     <script src="models/world.class.js"></script>
     <script src="models/drawable-object.class.js"></script>
     <script src="models/status-bar-bottle.class.js"></script>
@@ -14,6 +15,7 @@
     <script src="models/status-bar-coin.class.js"></script>
     <script src="models/status-bar-endboss.class.js"></script>
     <script src="models/keyboard.class.js"></script>
+    <script src="js/game.js"></script>
     <script src="models/movable-object.class.js"></script>
     <script src="models/background-object.class.js"></script>
     <script src="models/throwable-object.class.js"></script>
@@ -26,7 +28,6 @@
     <script src="models/coin.class.js"></script>
     <script src="models/level.class.js"></script>
     <script src="levels/level1.js"></script>
-    <script src="js/game.js"></script>
 </head>
 <body>
     <h1>El Pollo Loco</h1>
@@ -56,12 +57,12 @@
                 <img src="img/9_intro_outro_screens/start/sound-on.png" alt="soundOnButton">
                 <p>Sound</p>
             </div>
-            <div  id="enterFullscreen" class="control-icons" onclick="enterFullscreen()">
+            <div id="enterFullscreen" class="control-icons" onclick="enterFullscreen()">
                 <img class="full-screen-icon" src="img/9_intro_outro_screens/start/resize-arrows.png"
                      alt="fullScreenButton">
                 <p>Full Screen</p>
             </div>
-            <div  id="exitFullscreen" class="control-icons d-none" onclick="closeFullscreen()">
+            <div id="exitFullscreen" class="control-icons d-none" onclick="closeFullscreen()">
                 <img class="full-screen-icon" src="img/9_intro_outro_screens/start/minimize.png"
                      alt="fullScreenButton">
                 <p>Exit Full Screen</p>
@@ -107,7 +108,7 @@
                 </div>
                 <div class="explanation-icons">
                     <div class="option-2keys">
-                    <img src="img/9_intro_outro_screens/start/up-arrow.png" alt="spaceKey">
+                        <img src="img/9_intro_outro_screens/start/up-arrow.png" alt="spaceKey">
                         <h2>& Space</h2>
                     </div>
                     <h2>Jump</h2>
@@ -121,26 +122,47 @@
                     <h2>Refill Energy Pepe</h2>
                 </div>
                 <div class="explanation-icons">
-                    <img src="img/9_intro_outro_screens/start/resize-arrows.png" alt="fullScreen" class="full-screen-icon">
+                    <img src="img/9_intro_outro_screens/start/resize-arrows.png" alt="fullScreen"
+                         class="full-screen-icon">
                     <h2>Full Screen</h2>
                 </div>
                 <img src="img/9_intro_outro_screens/start/close.png" alt="close" class="close-icon">
             </div>
         </div>
-        <div id="lostGame" class="screen-box d-none"></div>
-        <div id="wonGame" class="screen-box d-none"></div>
-<!--        <div id="hud">-->
-<!--            <div class="panel">-->
-<!--                <div class="panel-wrapper">-->
-<!--                    <button id="btnLeft"></button>-->
-<!--                    <button id="btnRight"></button>-->
-<!--                </div>-->
-<!--                <div class="panel-wrapper">-->
-<!--                    <button id="btnJump"></button>-->
-<!--                    <button id="btnThrow"></button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div id="lostGame" class="screen-box d-none">
+            <div class="control-icons" onclick="replayGame()">
+                <img class="full-screen-icon" src="img/9_intro_outro_screens/start/replay.png"
+                     alt="replayButton">
+                <p>Try Again</p>
+            </div>
+        </div>
+        <div id="wonGame" class="screen-box d-none">
+            <div class="control-icons" onclick="replayGame()">
+                <img class="full-screen-icon" src="img/9_intro_outro_screens/start/replay.png"
+                     alt="replayButton">
+                <p>Try Again</p>
+            </div>
+        </div>
+        <div id="hud" class="d-none">
+            <div class="panel">
+                <div class="panel-wrapper">
+                    <button id="btnLeft" class="control-button">
+                        <img src="img/9_intro_outro_screens/start/left-arrow.png" alt="left">
+                    </button>
+                    <button id="btnRight" class="control-button">
+                        <img src="img/9_intro_outro_screens/start/right-arrow.png" alt="left">
+                    </button>
+                </div>
+                <div class="panel-wrapper">
+                    <button id="btnJump" class="control-button">
+                        <img src="img/9_intro_outro_screens/start/up-arrow.png" alt="up">
+                    </button>
+                    <button id="btnThrow" class="control-button">
+                        <img src="img/9_intro_outro_screens/start/up-right.png" alt="throw">
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

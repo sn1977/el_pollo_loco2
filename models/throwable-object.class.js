@@ -31,7 +31,7 @@ class ThrowableObject extends MovableObject {
     throw() {
         this.speedY = 30;
         this.applyGravity();
-        setInterval(() => {
+        setStoppableInterval(() => {
             if (!this.hasHitGround) {
                 this.x += 10;
             }
@@ -41,18 +41,21 @@ class ThrowableObject extends MovableObject {
                 this.hasHitGround = true; // Verhindert wiederholte Animationen
             }
         }, 25);
+        // addInterval(intervalId);
     }
 
     animateBottles() {
-        setInterval(() => {
+        setStoppableInterval(() => {
             this.playAnimation(this.IMAGES_BOTTLE_ROTATION);
         }, 25);
+        // addInterval(animationIntervalId);
     }
 
     animateBottleSplash() {
-        setInterval(() => {
+        setStoppableInterval(() => {
             this.playAnimation(this.IMAGES_BOTTLE_SPLASH);
         }, 25);
+        // addInterval(animationIntervalId);
     }
 
     hitEndboss() {
