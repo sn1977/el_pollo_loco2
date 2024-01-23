@@ -105,7 +105,7 @@ function createLevel1(world) {
     }
 
     const endboss = new Endboss(world);
-    const enemies = [ endboss]; // ...chickens, ...chickenSmall,
+    const enemies = [...chickens, ...chickenSmall, endboss];
 
     // Zurücksetzen der Hintergrundobjekte könnte auch notwendig sein
     const backgroundObjects = createBackgroundObjects();
