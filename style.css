@@ -26,6 +26,21 @@ h1 {
     text-shadow: 4px 2px 2px rgba(0, 0, 0, 0.5);
 }
 
+.smartpohneModus {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 120vw;
+    height: 120vh;
+    backdrop-filter: blur(28px);
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    gap: 22px;
+    font-size: 30px;
+}
+
 #canvas-wrapper {
     position: relative;
     max-width: 720px;
@@ -211,14 +226,7 @@ canvas {
 #hud {
     position: absolute;
     width: 100%;
-    /*right: 0;*/
-    /*left: 0;*/
-    /*top: 0;*/
-    bottom: 0;
-    /*margin: auto;*/
-    /*z-index: 1;*/
-    /*align-items: end;*/
-    /*display: inline-grid;*/
+    bottom: -72px;
 }
 
 .panel {
