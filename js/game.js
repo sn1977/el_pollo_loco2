@@ -13,7 +13,9 @@ let fullScreen = false;
 let intervalIds = [];
 
 function init() {
-    // ... Ihre bestehenden init-Codes
+    // Register an event listener to track window size changes
+    window.addEventListener("resize", handlePhonePosition);
+
     mobileHud(); // Rufen Sie diese Funktion hier auf
     window.addEventListener("resize", mobileHud); // Fügt den Listener hinzu
 }
@@ -214,6 +216,7 @@ function updateFullscreenIcons() {
 function enterFullscreen() {
     fullScreen = !fullScreen;
     let element = document.getElementById('canvas-wrapper'); // Spiel ist im Startbildschirm oder pausiert, verwenden Sie den Wrapper
+    const chronicals = document.getElementById('chronicals');
 
     // Vollbildmodus aktivieren
     if (element.requestFullscreen) {
@@ -224,12 +227,14 @@ function enterFullscreen() {
         element.msRequestFullscreen();
     }
 
+    chronicals.style.color = 'wheat';
     updateFullscreenIcons();
     mobileHud();
 }
 
 function closeFullscreen() {
     fullScreen = !fullScreen;
+    const chronicals = document.getElementById('chronicals');
 
     if (document.exitFullscreen) {
         document.exitFullscreen();
@@ -239,6 +244,7 @@ function closeFullscreen() {
         document.msExitFullscreen();
     }
 
+    chronicals.style.color = '';
     // Umschalten der Sichtbarkeit der Icons
     updateFullscreenIcons();
     mobileHud();
@@ -274,53 +280,56 @@ function mobileHud() {
 function updateFullScreenStyle() {
     const fullScreenElement = document.getElementById('full-screen');
     const hudContainer = document.getElementById('hud');
-    const panelWrappers = document.querySelectorAll('.panel-wrapper');
-    const touchBtns = document.querySelectorAll('.control-button');
+    const touchBtns = document.querySelectorAll('.control-button, .control-icons');
+    const elements = document.querySelectorAll('#muteIcon, #volumeIcon, #enterFullscreen, #exitFullscreen');
 
     if (isGameStarted) {
-        fullScreenElement.style.right = fullScreen ? '36px' : '-82px';
+        fullScreenElement.style.right = '0px';
         fullScreenElement.style.top = '8px';
-        fullScreenElement.style.flexDirection = 'column';
+        fullScreenElement.style.width = '100%';
+        fullScreenElement.style.justifyContent = 'center';
         hudContainer.style.display = 'block';
-        hudContainer.style.bottom = '8px';
-
-        // Setzen des Stils für jedes Element in panelWrappers
-        panelWrappers.forEach(wrapper => {
-            wrapper.style.margin = '5px';
-            wrapper.style.gap = '8px';
-        });
 
         touchBtns.forEach(touchBtn => {
-            touchBtn.style.width = '60px';
-            touchBtn.style.height = '60px';
+            touchBtn.style.width = '40px';
+            touchBtn.style.height = '40px';
+
+            const img = touchBtn.querySelector('img');
+
+            img.style.width = '28px'; // Größe des Bildes innerhalb des Buttons anpassen
+            img.style.height = 'auto'; // Höhe automatisch anpassen, um das Seitenverhältnis beizubehalten
         });
 
-        // Update touch button sizes only when not in full-screen mode
-        if (!fullScreen) {
-            touchBtns.forEach(touchBtn => {
-                touchBtn.style.width = '40px';
-                touchBtn.style.height = '40px';
-
-                const img = touchBtn.querySelector('img');
-                if (img) {
-                    img.style.width = '28px'; // Größe des Bildes innerhalb des Buttons anpassen
-                    img.style.height = 'auto'; // Höhe automatisch anpassen, um das Seitenverhältnis beizubehalten
-                }
-            });
-        }
-    } else {
-        fullScreenElement.style.right = '8px';
-        fullScreenElement.style.top = '8px';
-
+        elements.forEach(element => {
+            element.style.width = '20px';
+            element.style.height = '20px';
+        });
     }
 }
 
 function resetFullScreenStyle() {
     const fullScreenElement = document.getElementById('full-screen');
+    const hudContainer = document.getElementById('hud');
+    const touchBtns = document.querySelectorAll('.control-button, .control-icons');
+
     fullScreenElement.style.right = '';
     fullScreenElement.style.top = '';
-    fullScreenElement.style.flexDirection = '';
+    fullScreenElement.style.width = '';
+    fullScreenElement.style.justifyContent = '';
+    hudContainer.style.display = '';
+
+    touchBtns.forEach(touchBtn => {
+        touchBtn.style.width = '';
+        touchBtn.style.height = '';
+
+        const img = touchBtn.querySelector('img');
+        if (img) {
+            img.style.width = ''; // Setzen Sie die Größe des Bildes innerhalb des Buttons zurück
+            img.style.height = ''; // Setzen Sie die Höhe des Bildes zurück
+        }
+    });
 }
+
 
 /**
  * This function toggles the visibility of a mobile mode element based on screen width and orientation.
@@ -332,5 +341,4 @@ function handlePhonePosition() {
         document.getElementById("smartpohneModus").classList.add("d-none");
     }
 }
-// Register an event listener to track window size changes
-window.addEventListener("resize", handlePhonePosition);
+
