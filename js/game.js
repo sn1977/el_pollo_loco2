@@ -3,6 +3,8 @@ let world;
 let keyboard = new Keyboard();
 let game_sound = new Audio('audio/gameMusic.mp3');
 let brokenGlass_sound = new Audio('audio/brokenBottle.mp3');
+let loosing_sound = new Audio('audio/loosingSound.wav');
+let winning_sound = new Audio('audio/winningSound.wav');
 let isGameStarted = false;
 let isMuted = false;
 let fullScreen = false;
@@ -184,6 +186,7 @@ function lostGame() {
     let lostScreen = document.getElementById('lostGame');
     lostScreen.classList.remove('d-none');
     toggleMuteAllSounds();
+    loosing_sound.play();
     clearAllIntervals();
 }
 
@@ -191,6 +194,7 @@ function wonGame() {
     let wonScreen = document.getElementById('wonGame');
     wonScreen.classList.remove('d-none');
     toggleMuteAllSounds();
+    winning_sound.play();
     clearAllIntervals();
 }
 
