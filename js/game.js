@@ -10,15 +10,19 @@ let isMuted = false;
 let fullScreen = false;
 let intervalIds = [];
 
+/**
+ * Initializes the game by setting up necessary event listeners and executing initial configuration functions.
+ */
 function init() {
     // Register an event listener to track window size changes
     window.addEventListener("resize", handlePhonePosition);
-
     mobileHud();
     window.addEventListener("resize", mobileHud);
 }
 
-
+/**
+ * Handles keydown events for game controls.
+ */
 window.addEventListener('keydown', (event) => {
     if (event.keyCode === 40) {
         keyboard.DOWN = true;
@@ -43,6 +47,9 @@ window.addEventListener('keydown', (event) => {
     }
 });
 
+/**
+ * Handles keydown events for game controls.
+ */
 window.addEventListener('keyup', (event) => {
     if (event.keyCode === 40) {
         keyboard.DOWN = false;
@@ -67,6 +74,9 @@ window.addEventListener('keyup', (event) => {
     }
 });
 
+/**
+ * Sets up touch controls for mobile devices.
+ */
 function touchMobileIcons() {
     document.getElementById("btnLeft").addEventListener("touchstart", (e) => {
         e.preventDefault();
@@ -105,7 +115,10 @@ function touchMobileIcons() {
     }, {passive: false});
 }
 
-
+/**
+ * This function toggles the display of instruction screens based on the provided ID.
+ * @param {string} id - The ID of the element to be toggled.
+ */
 function toggleInstructions(id) {
     let element = document.getElementById(id);
     let startScreen = document.getElementById('start-screen');
@@ -124,6 +137,9 @@ function toggleInstructions(id) {
     }
 }
 
+/**
+ * This function toggles the mute state of all game sounds.
+ */
 function toggleMuteAllSounds() {
     isMuted = !isMuted;
     world.pain_sound.muted = isMuted;
@@ -140,6 +156,9 @@ function toggleMuteAllSounds() {
     toggleVisibilityIcons();
 }
 
+/**
+ * This function toggles the visibility of mute and volume icons based on the current mute state.
+ */
 function toggleVisibilityIcons() {
     let muteIcon = document.getElementById('muteIcon');
     let volumeIcon = document.getElementById('volumeIcon');
@@ -148,6 +167,9 @@ function toggleVisibilityIcons() {
     volumeIcon.classList.toggle('d-none', !isMuted);
 }
 
+/**
+ * This function starts the game by initializing variables, setting up the canvas, and starting the game sound loop.
+ */
 function startGame() {
     isGameStarted = true;
     let startScreen = document.getElementById('start-screen');
@@ -168,12 +190,18 @@ function startGame() {
     mobileHud();
 }
 
+/**
+ * This function loops the background music for the game.
+ */
 function loopOfGameSound() {
     game_sound.currentTime = 0; // Reset the sound to the beginning
     game_sound.play();
     game_sound.loop = true;
 }
 
+/**
+ * This function restarts the game from the beginning.
+ */
 function replayGame() {
     let lostScreen = document.getElementById('lostGame');
     let wonScreen = document.getElementById('wonGame');
@@ -183,6 +211,9 @@ function replayGame() {
     toggleMuteAllSounds();
 }
 
+/**
+ * Handles the the end-of-game scenario when the player loses.
+ */
 function lostGame() {
     let lostScreen = document.getElementById('lostGame');
     lostScreen.classList.remove('d-none');
@@ -191,6 +222,9 @@ function lostGame() {
     clearAllIntervals();
 }
 
+/**
+ * Handles the end-of-game scenario when the player wins.
+ */
 function wonGame() {
     let wonScreen = document.getElementById('wonGame');
     wonScreen.classList.remove('d-none');
@@ -199,6 +233,9 @@ function wonGame() {
     clearAllIntervals();
 }
 
+/**
+ * This function updates the fullscreen icons based on the current fullscreen state.
+ */
 function updateFullscreenIcons() {
     let enterFullscreen = document.getElementById('enterFullscreen');
     let exitFullscreen = document.getElementById('exitFullscreen');
@@ -207,6 +244,9 @@ function updateFullscreenIcons() {
     exitFullscreen.classList.toggle('d-none', !fullScreen);
 }
 
+/**
+ * This function enters fullscreen mode for the game.
+ */
 function enterFullscreen() {
     fullScreen = !fullScreen;
     let element = document.getElementById('canvas-wrapper');
@@ -225,11 +265,17 @@ function enterFullscreen() {
     mobileHud();
 }
 
+/**
+ * This function changes the font color of chronicles when entering fullscreen mode.
+ */
 function changeChronicalsFontcolor() {
     const chronicals = document.getElementById('chronicals');
     chronicals.style.color = 'wheat';
 }
 
+/**
+ * This function exits fullscreen mode for the game.
+ */
 function closeFullscreen() {
     fullScreen = !fullScreen;
 
@@ -246,19 +292,30 @@ function closeFullscreen() {
     mobileHud();
 }
 
+/**
+ * This function resets the font color of chronicles when exiting fullscreen mode.
+ */
 function resetChronicalsFontcolor() {
     const chronicals = document.getElementById('chronicals');
     chronicals.style.color = '';
 }
 
+/**
+ * This function sets an interval with the given function and time, and stores the interval ID for future reference.
+ * @param {Function} fn - The function to be executed.
+ * @param {number} time - The interval time in milliseconds.
+ */
 function setStoppableInterval(fn, time) {
     let id = setInterval(fn, time);
     intervalIds.push(id);
 }
 
+/**
+ * This function clears all intervals that have been stored in the intervalIds array.
+ */
 function clearAllIntervals() {
     intervalIds.forEach(clearInterval);
-    intervalIds = []; // Setzt das Array zurück
+    intervalIds = [];
 }
 
 /**
@@ -276,6 +333,9 @@ function mobileHud() {
     }
 }
 
+/**
+ * This function updates the styles for fullscreen elements and displays the HUD container.
+ */
 function updateFullScreenStyle() {
     const fullScreenElement = document.getElementById('full-screen');
     const hudContainer = document.getElementById('hud');
@@ -292,6 +352,9 @@ function updateFullScreenStyle() {
     }
 }
 
+/**
+ * This function updates the styles of touch buttons.
+ */
 function updateTouchBtns() {
     const touchBtns = document.querySelectorAll('.control-button, .control-icons');
     touchBtns.forEach(touchBtn => {
@@ -304,6 +367,9 @@ function updateTouchBtns() {
     });
 }
 
+/**
+ * This function updates the styles of screen and sound buttons.
+ */
 function updateScreenSoundBtns() {
     const elements = document.querySelectorAll('#muteIcon, #volumeIcon, #enterFullscreen, #exitFullscreen');
     elements.forEach(element => {
@@ -312,7 +378,12 @@ function updateScreenSoundBtns() {
     });
 }
 
-
+/**
+ * This function resets the styles of the full-screen and HUD elements to their default values.
+ * This function is typically called when exiting the mobile HUD layout or when
+ * the game state changes in a way that requires a reset of these elements.
+ * It also calls `resetTouchBtns` to reset the styles of touch buttons.
+ */
 function resetFullScreenStyle() {
     const fullScreenElement = document.getElementById('full-screen');
     const hudContainer = document.getElementById('hud');
@@ -326,6 +397,9 @@ function resetFullScreenStyle() {
     resetTouchBtns();
 }
 
+/**
+ * This function reset the style of the touch-buttons and it's images
+ */
 function resetTouchBtns() {
     const touchBtns = document.querySelectorAll('.control-button, .control-icons');
     touchBtns.forEach(touchBtn => {
