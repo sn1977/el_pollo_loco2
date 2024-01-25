@@ -133,6 +133,12 @@ class Character extends MovableObject {
     sleeping_sound = new Audio('audio/snoring.mp3');
 
     /**
+     * Flag indicating whether the character is jumping.
+     * @type {boolean}
+     */
+    isJumping = false;
+
+    /**
      * Object defining the character's hitbox offset.
      * @type {{top: number, left: number, right: number, bottom: number}}
      */
@@ -206,6 +212,7 @@ class Character extends MovableObject {
         if (this.world.keyboard.SPACE && !this.isAboveGround() || this.world.keyboard.UP && !this.isAboveGround()) {
             this.jump();
             this.jumping_sound.play();
+            this.isJumping = true; // Setzen Sie isJumping auf true, um anzuzeigen, dass der Charakter springt
         }
         this.world.camera_x = -this.x + 100;
     }
@@ -237,13 +244,14 @@ class Character extends MovableObject {
             this.resetGoToSleep();
         } else if (this.isDead()) {
             this.handleDeath();
-        } else if (this.isAboveGround()) {
-            this.playAnimation(this.IMAGES_JUMPING);
-            this.resetGoToSleep();
         } else {
-            if (this.isMoving()) {
+            if (this.isAboveGround() && this.isJumping) {
+                this.playAnimation(this.IMAGES_JUMPING);
+            } else if (this.isMoving()) {
                 this.playAnimation(this.IMAGES_WALKING);
                 this.resetGoToSleep();
+            } else {
+                this.playAnimation(this.IMAGES_IDLE);
             }
         }
     }
