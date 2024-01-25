@@ -62,7 +62,7 @@ class World {
             this.checkCollisionsCoins();
             this.refillHealth();
             this.checkBottleOnEnemy();
-        }, 60);
+        }, 1000 / 60);
     }
 
     /**
