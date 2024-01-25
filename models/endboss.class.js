@@ -1,12 +1,53 @@
+/**
+ * Represents the endboss in the game.
+ */
 class Endboss extends MovableObject {
+    /**
+     * Y-coordinate of the endboss.
+     * @type {number}
+     */
     y = 25;
+
+    /**
+     * Height of the endboss.
+     * @type {number}
+     */
     height = 430;
+
+    /**
+     * Width of the endboss.
+     * @type {number}
+     */
     width = 330;
-    energy = 30;
+
+    /**
+     * Energy level of the endboss.
+     * @type {number}
+     */
+    energy = 50;
+
+    /**
+     * Whether the endboss is dead.
+     * @type {boolean}
+     */
     isDead = false;
+
+    /**
+     * Whether the endboss has had first contact with the character.
+     * @type {boolean}
+     */
     firstContact = false;
+
+    /**
+     * Counter variable used in animations.
+     * @type {number}
+     */
     i = 0;
 
+    /**
+     * Array holding the image paths for walking animation
+     * @type {string[]}
+     */
     IMAGES_WALKING = [
         'img/4_enemie_boss_chicken/1_walk/G1.png',
         'img/4_enemie_boss_chicken/1_walk/G2.png',
@@ -14,6 +55,10 @@ class Endboss extends MovableObject {
         'img/4_enemie_boss_chicken/1_walk/G4.png'
     ];
 
+    /**
+     * Array holding the image paths for alert animation
+     * @type {string[]}
+     */
     IMAGES_ALERT = [
         'img/4_enemie_boss_chicken/2_alert/G5.png',
         'img/4_enemie_boss_chicken/2_alert/G6.png',
@@ -25,6 +70,10 @@ class Endboss extends MovableObject {
         'img/4_enemie_boss_chicken/2_alert/G12.png'
     ];
 
+    /**
+     * Array holding the image paths for attack animation
+     * @type {string[]}
+     */
     IMAGES_ATTACK = [
         'img/4_enemie_boss_chicken/3_attack/G13.png',
         'img/4_enemie_boss_chicken/3_attack/G14.png',
@@ -36,20 +85,33 @@ class Endboss extends MovableObject {
         'img/4_enemie_boss_chicken/3_attack/G20.png'
     ];
 
+    /**
+     * Array holding the image paths for hurt animation
+     * @type {string[]}
+     */
     IMAGES_HURT = [
         'img/4_enemie_boss_chicken/4_hurt/G21.png',
         'img/4_enemie_boss_chicken/4_hurt/G22.png',
         'img/4_enemie_boss_chicken/4_hurt/G23.png'
     ];
 
+    /**
+     * Array holding the image paths for dead animation
+     * @type {string[]}
+     */
     IMAGES_DEAD = [
         'img/4_enemie_boss_chicken/5_dead/G24.png',
         'img/4_enemie_boss_chicken/5_dead/G25.png',
         'img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
+    /**
+     * Constructs a new Endboss instance.
+     * @param {World} world - The world in which the endboss exists.
+     */
     constructor(world) {
         super();
+        // Load images and set initial settings
         this.world = world;
         this.loadImage(this.IMAGES_WALKING[3]);
         this.loadImages(this.IMAGES_WALKING);
@@ -62,33 +124,59 @@ class Endboss extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Checks the distance to the endboss.
+     * @param {number} distance - The distance to check.
+     * @returns {boolean} True if within distance.
+     */
     distanceToEndboss(distance) {
         return Math.abs(this.x - this.world.character.x) < distance;
     }
 
-    chasingCharacter() {
-        if (this.world && this.distanceToEndboss(400)) {
-            if (this.i < 10) {
-                this.playAnimation(this.IMAGES_WALKING);
-            } else {
-                this.playAnimation(this.IMAGES_ATTACK);
-            }
-            this.i++;
-            if (this.world.character.x < 4150 && !this.firstContact) {
-                this.i = 0;
-                this.firstContact = true;
-            }
+    /**
+     * Selects and plays the appropriate animation based on the current state.
+     */
+    selectAnimation() {
+        if (this.i < 10) {
+            this.playAnimation(this.IMAGES_WALKING);
+        } else {
+            this.playAnimation(this.IMAGES_ATTACK);
+        }
+        this.i++;
+    }
 
-            if (this.x - this.world.character.x > 0) { // Wenn der Endboss rechts vom Charakter ist
-                this.moveLeft();
-                this.otherDirection = false; // Bild spiegeln
-            } else {
-                this.moveRight();
-                this.otherDirection = true; // Bild nicht spiegeln
-            }
+    /**
+     * Moves the endboss towards the character based on their positions.
+     */
+    moveTowardsCharacter() {
+        if (this.world.character.x < 4150 && !this.firstContact) {
+            this.i = 0;
+            this.firstContact = true;
+        }
+
+        if (this.x - this.world.character.x > 0) { // If the endboss is to the right of the character
+            this.moveLeft();
+            this.otherDirection = false; // Mirror image
+        } else {
+            this.moveRight();
+            this.otherDirection = true; // Do not mirror image
         }
     }
 
+    /**
+     * Controls the behavior when chasing the character.
+     */
+    chasingCharacter() {
+        if (this.world && this.distanceToEndboss(400)) {
+            this.selectAnimation();
+            this.moveTowardsCharacter();
+        }
+    }
+
+
+    /**
+     * Animates the endboss, including walking, attacking, and dying.
+     */
     animate() {
         setStoppableInterval(() => {
             if (this.energy === 0) {
@@ -101,6 +189,5 @@ class Endboss extends MovableObject {
                 this.chasingCharacter();
             }
         }, 200);
-        // addInterval(intervalId);
     }
 }
