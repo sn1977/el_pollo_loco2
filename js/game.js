@@ -8,20 +8,18 @@ let winning_sound = new Audio('audio/winningSound.wav');
 let isGameStarted = false;
 let isMuted = false;
 let fullScreen = false;
-
-// Globale Variable für Intervall-IDs
 let intervalIds = [];
 
 function init() {
     // Register an event listener to track window size changes
     window.addEventListener("resize", handlePhonePosition);
 
-    mobileHud(); // Rufen Sie diese Funktion hier auf
-    window.addEventListener("resize", mobileHud); // Fügt den Listener hinzu
+    mobileHud();
+    window.addEventListener("resize", mobileHud);
 }
 
+
 window.addEventListener('keydown', (event) => {
-    // console.log(event);
     if (event.keyCode === 40) {
         keyboard.DOWN = true;
     }
@@ -46,7 +44,6 @@ window.addEventListener('keydown', (event) => {
 });
 
 window.addEventListener('keyup', (event) => {
-    // console.log(event);
     if (event.keyCode === 40) {
         keyboard.DOWN = false;
     }
@@ -74,39 +71,40 @@ function touchMobileIcons() {
     document.getElementById("btnLeft").addEventListener("touchstart", (e) => {
         e.preventDefault();
         keyboard.LEFT = true;
-    });
+    }, {passive: false});
     document.getElementById("btnLeft").addEventListener("touchend", (e) => {
         e.preventDefault();
         keyboard.LEFT = false;
-    });
+    }, {passive: false});
 
     document.getElementById("btnRight").addEventListener("touchstart", (e) => {
         e.preventDefault();
         keyboard.RIGHT = true;
-    });
+    }, {passive: false});
     document.getElementById("btnRight").addEventListener("touchend", (e) => {
         e.preventDefault();
         keyboard.RIGHT = false;
-    });
+    }, {passive: false});
 
     document.getElementById("btnJump").addEventListener("touchstart", (e) => {
         e.preventDefault();
         keyboard.SPACE = true;
-    });
+    }, {passive: false});
     document.getElementById("btnJump").addEventListener("touchend", (e) => {
         e.preventDefault();
         keyboard.SPACE = false;
-    });
+    }, {passive: false});
 
     document.getElementById("btnThrow").addEventListener("touchstart", (e) => {
         e.preventDefault();
         keyboard.KEY_D = true;
-    });
+    }, {passive: false});
     document.getElementById("btnThrow").addEventListener("touchend", (e) => {
         e.preventDefault();
         keyboard.KEY_D = false;
-    });
+    }, {passive: false});
 }
+
 
 function toggleInstructions(id) {
     let element = document.getElementById(id);
@@ -139,17 +137,15 @@ function toggleMuteAllSounds() {
     brokenGlass_sound.muted = isMuted;
     game_sound.muted = isMuted;
 
-    // Umschalten der Sichtbarkeit der Icons
+    toggleVisibilityIcons();
+}
+
+function toggleVisibilityIcons() {
     let muteIcon = document.getElementById('muteIcon');
     let volumeIcon = document.getElementById('volumeIcon');
 
-    if (isMuted) {
-        muteIcon.classList.add('d-none');
-        volumeIcon.classList.remove('d-none');
-    } else {
-        muteIcon.classList.remove('d-none');
-        volumeIcon.classList.add('d-none');
-    }
+    muteIcon.classList.toggle('d-none', isMuted);
+    volumeIcon.classList.toggle('d-none', !isMuted);
 }
 
 function startGame() {
@@ -167,12 +163,15 @@ function startGame() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
 
-    game_sound.currentTime = 0; // Setzen Sie den Sound auf den Anfang zurück
-    game_sound.play();
-    game_sound.loop = true; // Stellen Sie sicher, dass der Sound wiederholt wird
-
+    loopOfGameSound()
     touchMobileIcons();
     mobileHud();
+}
+
+function loopOfGameSound() {
+    game_sound.currentTime = 0; // Reset the sound to the beginning
+    game_sound.play();
+    game_sound.loop = true;
 }
 
 function replayGame() {
@@ -204,21 +203,15 @@ function updateFullscreenIcons() {
     let enterFullscreen = document.getElementById('enterFullscreen');
     let exitFullscreen = document.getElementById('exitFullscreen');
 
-    if (fullScreen) {
-        enterFullscreen.classList.add('d-none');
-        exitFullscreen.classList.remove('d-none');
-    } else {
-        enterFullscreen.classList.remove('d-none');
-        exitFullscreen.classList.add('d-none');
-    }
+    enterFullscreen.classList.toggle('d-none', fullScreen);
+    exitFullscreen.classList.toggle('d-none', !fullScreen);
 }
 
 function enterFullscreen() {
     fullScreen = !fullScreen;
-    let element = document.getElementById('canvas-wrapper'); // Spiel ist im Startbildschirm oder pausiert, verwenden Sie den Wrapper
-    const chronicals = document.getElementById('chronicals');
+    let element = document.getElementById('canvas-wrapper');
 
-    // Vollbildmodus aktivieren
+    // Activate full screen mode
     if (element.requestFullscreen) {
         element.requestFullscreen();
     } else if (element.webkitRequestFullscreen) { // Safari
@@ -227,14 +220,18 @@ function enterFullscreen() {
         element.msRequestFullscreen();
     }
 
-    chronicals.style.color = 'wheat';
+    changeChronicalsFontcolor();
     updateFullscreenIcons();
     mobileHud();
 }
 
+function changeChronicalsFontcolor() {
+    const chronicals = document.getElementById('chronicals');
+    chronicals.style.color = 'wheat';
+}
+
 function closeFullscreen() {
     fullScreen = !fullScreen;
-    const chronicals = document.getElementById('chronicals');
 
     if (document.exitFullscreen) {
         document.exitFullscreen();
@@ -244,10 +241,14 @@ function closeFullscreen() {
         document.msExitFullscreen();
     }
 
-    chronicals.style.color = '';
-    // Umschalten der Sichtbarkeit der Icons
+    resetChronicalsFontcolor();
     updateFullscreenIcons();
     mobileHud();
+}
+
+function resetChronicalsFontcolor() {
+    const chronicals = document.getElementById('chronicals');
+    chronicals.style.color = '';
 }
 
 function setStoppableInterval(fn, time) {
@@ -255,7 +256,6 @@ function setStoppableInterval(fn, time) {
     intervalIds.push(id);
 }
 
-// Funktion, um alle Intervalle zu beenden
 function clearAllIntervals() {
     intervalIds.forEach(clearInterval);
     intervalIds = []; // Setzt das Array zurück
@@ -268,11 +268,10 @@ function mobileHud() {
     // Überprüfen Sie, ob wir uns im mobilen Layout befinden
     if (window.innerWidth > window.innerHeight && window.innerWidth <= 955) {
         document.querySelector('h1').style.display = 'none';
-        updateFullScreenStyle(); // Aktualisieren Sie den Stil von #full-screen
+        updateFullScreenStyle();
     } else {
         document.getElementById('hud').classList.add('d-none');
         document.querySelector('h1').style.display = 'block';
-        // Setzen Sie den #full-screen-Stil auf Standard zurück
         resetFullScreenStyle();
     }
 }
@@ -280,8 +279,6 @@ function mobileHud() {
 function updateFullScreenStyle() {
     const fullScreenElement = document.getElementById('full-screen');
     const hudContainer = document.getElementById('hud');
-    const touchBtns = document.querySelectorAll('.control-button, .control-icons');
-    const elements = document.querySelectorAll('#muteIcon, #volumeIcon, #enterFullscreen, #exitFullscreen');
 
     if (isGameStarted) {
         fullScreenElement.style.right = '0px';
@@ -290,27 +287,35 @@ function updateFullScreenStyle() {
         fullScreenElement.style.justifyContent = 'center';
         hudContainer.style.display = 'block';
 
-        touchBtns.forEach(touchBtn => {
-            touchBtn.style.width = '40px';
-            touchBtn.style.height = '40px';
-
-            const img = touchBtn.querySelector('img');
-
-            img.style.width = '28px'; // Größe des Bildes innerhalb des Buttons anpassen
-            img.style.height = 'auto'; // Höhe automatisch anpassen, um das Seitenverhältnis beizubehalten
-        });
-
-        elements.forEach(element => {
-            element.style.width = '20px';
-            element.style.height = '20px';
-        });
+        updateTouchBtns();
+        updateScreenSoundBtns();
     }
 }
+
+function updateTouchBtns() {
+    const touchBtns = document.querySelectorAll('.control-button, .control-icons');
+    touchBtns.forEach(touchBtn => {
+        touchBtn.style.width = '40px';
+        touchBtn.style.height = '40px';
+
+        const img = touchBtn.querySelector('img');
+        img.style.width = '28px'; // Größe des Bildes innerhalb des Buttons anpassen
+        img.style.height = 'auto'; // Höhe automatisch anpassen, um das Seitenverhältnis beizubehalten
+    });
+}
+
+function updateScreenSoundBtns() {
+    const elements = document.querySelectorAll('#muteIcon, #volumeIcon, #enterFullscreen, #exitFullscreen');
+    elements.forEach(element => {
+        element.style.width = '20px';
+        element.style.height = '20px';
+    });
+}
+
 
 function resetFullScreenStyle() {
     const fullScreenElement = document.getElementById('full-screen');
     const hudContainer = document.getElementById('hud');
-    const touchBtns = document.querySelectorAll('.control-button, .control-icons');
 
     fullScreenElement.style.right = '';
     fullScreenElement.style.top = '';
@@ -318,6 +323,11 @@ function resetFullScreenStyle() {
     fullScreenElement.style.justifyContent = '';
     hudContainer.style.display = '';
 
+    resetTouchBtns();
+}
+
+function resetTouchBtns() {
+    const touchBtns = document.querySelectorAll('.control-button, .control-icons');
     touchBtns.forEach(touchBtn => {
         touchBtn.style.width = '';
         touchBtn.style.height = '';
@@ -329,7 +339,6 @@ function resetFullScreenStyle() {
         }
     });
 }
-
 
 /**
  * This function toggles the visibility of a mobile mode element based on screen width and orientation.
