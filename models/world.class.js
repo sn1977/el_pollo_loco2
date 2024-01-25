@@ -19,6 +19,9 @@ class World {
     // Lists of game objects
     throwableObjects = [];
 
+    // Attribute to manage bottle throwing cooldown
+    lastBottleThrowTime = 0;
+
     // Audio elements
     pain_sound = new Audio('audio/pain.mp3');
     collectingBottle_sound = new Audio('audio/collectingBottle.mp3');
@@ -216,18 +219,24 @@ class World {
             if (enemyIndex > -1) {
                 this.level.enemies.splice(enemyIndex, 1); // Removing the enemy at the index location found
             }
-        }, 1000);
+        }, 300);
     }
 
     /**
-     * Checks if the character throws a bottle and handles the interaction.
+     * Checks if the character can throw a bottle and manages bottle throwing.
+     * This method ensures that there is a cooldown between bottle throws.
      */
     checkThrowObjects() {
-        if (this.keyboard.KEY_D && this.statusBarBottle.amountBottles > 0) {
-            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
+        // Check if the "D" key is pressed, the character has bottles in inventory, and if enough time has passed since the last bottle throw
+        if (this.keyboard.KEY_D && this.statusBarBottle.amountBottles > 0 && Date.now() - this.lastBottleThrowTime >= 1000) {
+            // Creates a new ThrowableObject at the current position of the character
+            let bottle = new ThrowableObject(this.character.x + 70, this.character.y + 100);
             this.throwableObjects.push(bottle);
             this.statusBarBottle.amountBottles -= 1;
             this.statusBarBottle.setAmountBottles(this.statusBarBottle.amountBottles);
+
+            // Update the timestamp of the last bottle throw
+            this.lastBottleThrowTime = Date.now();
         }
     }
 
