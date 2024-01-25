@@ -1,5 +1,18 @@
+/**
+ * Represents the main character of the game.
+ */
 class Character extends MovableObject {
+    /**
+     * Height of the character.
+     * @type {number}
+     */
     height = 300;
+
+
+    /**
+     * Array of images for the walking animation.
+     * @type {string[]}
+     */
     IMAGES_WALKING = [
         'img/2_character_pepe/2_walk/W-21.png',
         'img/2_character_pepe/2_walk/W-22.png',
@@ -8,6 +21,11 @@ class Character extends MovableObject {
         'img/2_character_pepe/2_walk/W-25.png',
         'img/2_character_pepe/2_walk/W-26.png'
     ];
+
+    /**
+     * Array of images for the jumping animation.
+     * @type {string[]}
+     */
     IMAGES_JUMPING = [
         'img/2_character_pepe/3_jump/J-31.png',
         'img/2_character_pepe/3_jump/J-32.png',
@@ -19,12 +37,21 @@ class Character extends MovableObject {
         'img/2_character_pepe/3_jump/J-38.png',
         'img/2_character_pepe/3_jump/J-39.png'
     ];
+
+    /**
+     * Array of images for the hurt animation.
+     * @type {string[]}
+     */
     IMAGES_HURT = [
         'img/2_character_pepe/4_hurt/H-41.png',
         'img/2_character_pepe/4_hurt/H-42.png',
         'img/2_character_pepe/4_hurt/H-43.png'
     ];
 
+    /**
+     * Array of images for the dead animation.
+     * @type {string[]}
+     */
     IMAGES_DEAD = [
         'img/2_character_pepe/5_dead/D-51.png',
         'img/2_character_pepe/5_dead/D-52.png',
@@ -35,6 +62,10 @@ class Character extends MovableObject {
         'img/2_character_pepe/5_dead/D-57.png'
     ];
 
+    /**
+     * Array of images for the idle animation.
+     * @type {string[]}
+     */
     IMAGES_IDLE = [
         'img/2_character_pepe/1_idle/idle/I-1.png',
         'img/2_character_pepe/1_idle/idle/I-2.png',
@@ -48,6 +79,10 @@ class Character extends MovableObject {
         'img/2_character_pepe/1_idle/idle/I-10.png'
     ];
 
+    /**
+     * Array of images for the long idle animation.
+     * @type {string[]}
+     */
     IMAGES_LONG_IDLE = [
         'img/2_character_pepe/1_idle/long_idle/I-11.png',
         'img/2_character_pepe/1_idle/long_idle/I-12.png',
@@ -61,14 +96,46 @@ class Character extends MovableObject {
         'img/2_character_pepe/1_idle/long_idle/I-20.png'
     ];
 
+    /**
+     * Reference to the game world.
+     * @type {World}
+     */
     world;
+
+    /**
+     * Speed of the character.
+     * @type {number}
+     */
     speed = 10;
+
+    /**
+     * Counter for determining when the character goes to sleep.
+     * @type {number}
+     */
     goToSleep = 0;
 
+    /**
+     * Sound played when walking.
+     * @type {Audio}
+     */
     walking_sound = new Audio('audio/walking.mp3');
+
+    /**
+     * Sound played when jumping.
+     * @type {Audio}
+     */
     jumping_sound = new Audio('audio/jump.mp3');
+
+    /**
+     * Sound played when sleeping.
+     * @type {Audio}
+     */
     sleeping_sound = new Audio('audio/snoring.mp3');
 
+    /**
+     * Object defining the character's hitbox offset.
+     * @type {{top: number, left: number, right: number, bottom: number}}
+     */
     offset = {
         top: 130,
         left: 30,
@@ -76,6 +143,9 @@ class Character extends MovableObject {
         bottom: 15
     };
 
+    /**
+     * Constructs a new Character instance with initial settings.
+     */
     constructor() {
         super().loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
@@ -88,6 +158,9 @@ class Character extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Manages the character's sleeping state and plays the corresponding animation.
+     */
     characterSleep() {
         if (this.goToSleep < 5) {
             this.playAnimation(this.IMAGES_IDLE);
@@ -97,58 +170,115 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * Initiates the animation processes for the character.
+     */
     animate() {
+        this.startMovementAnimation();
+        this.startStatusAnimation();
+        this.startSleepAnimation();
+    }
+
+    /**
+     * Starts the movement related animations for the character.
+     */
+    startMovementAnimation() {
         setStoppableInterval(() => {
-            this.walking_sound.pause();
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-                this.goToSleep = 0;
-                this.sleeping_sound.pause();
-                this.moveRight();
-                this.otherDirection = false;
-                this.walking_sound.play();
-            }
-            if (this.world.keyboard.LEFT && this.x > 0) {
-                this.goToSleep = 0;
-                this.sleeping_sound.pause();
-                this.moveLeft();
-                this.otherDirection = true;
-                this.walking_sound.play();
-            }
-            if (this.world.keyboard.SPACE && !this.isAboveGround() || this.world.keyboard.UP && !this.isAboveGround()) {
-                this.goToSleep = 0;
-                this.sleeping_sound.pause();
-                this.jump();
-                this.jumping_sound.play();
-            }
-            this.world.camera_x = -this.x + 100;
+            this.handleMovement();
         }, 1000 / 60);
-        // addInterval(movementIntervalId); // Hinzufügen des Intervalls zum globalen Array
+    }
 
+    /**
+     * Handles the movement logic for the character.
+     */
+    handleMovement() {
+        this.walking_sound.pause();
+        if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+            this.moveRight();
+            this.otherDirection = false;
+            this.playWalkingSound();
+        }
+        if (this.world.keyboard.LEFT && this.x > 0) {
+            this.moveLeft();
+            this.otherDirection = true;
+            this.playWalkingSound();
+        }
+        if (this.world.keyboard.SPACE && !this.isAboveGround() || this.world.keyboard.UP && !this.isAboveGround()) {
+            this.jump();
+            this.jumping_sound.play();
+        }
+        this.world.camera_x = -this.x + 100;
+    }
+
+    /**
+     * Plays walking sound for the character.
+     */
+    playWalkingSound() {
+        this.goToSleep = 0;
+        this.sleeping_sound.pause();
+        this.walking_sound.play();
+    }
+
+    /**
+     * Starts the status-related animations for the character.
+     */
+    startStatusAnimation() {
         setStoppableInterval(() => {
-            if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-                this.goToSleep = 0;
-            } else if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
-                lostGame();
-                this.goToSleep = 0;
-            } else if (this.isAboveGround()) {
-                this.playAnimation(this.IMAGES_JUMPING);
-                this.goToSleep = 0;
-            } else {
-                if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                    this.playAnimation(this.IMAGES_WALKING);
-                    this.goToSleep = 0;
-                }
-            }
+            this.handleStatus();
         }, 50);
-        // addInterval(animationIntervalId); // Hinzufügen des Intervalls zum globalen Array
+    }
 
+    /**
+     * Handles the status animations for the character.
+     */
+    handleStatus() {
+        if (this.isHurt()) {
+            this.playAnimation(this.IMAGES_HURT);
+            this.resetGoToSleep();
+        } else if (this.isDead()) {
+            this.handleDeath();
+        } else if (this.isAboveGround()) {
+            this.playAnimation(this.IMAGES_JUMPING);
+            this.resetGoToSleep();
+        } else {
+            if (this.isMoving()) {
+                this.playAnimation(this.IMAGES_WALKING);
+                this.resetGoToSleep();
+            }
+        }
+    }
+
+    /**
+     * Manages the character's death process and triggers the lost game scenario.
+     */
+    handleDeath() {
+        this.playAnimation(this.IMAGES_DEAD);
+        lostGame();
+        this.resetGoToSleep();
+    }
+
+    /**
+     * Checks if the character is moving either to the left or right.
+     * @returns {boolean} True if the character is moving.
+     */
+    isMoving() {
+        return this.world.keyboard.RIGHT || this.world.keyboard.LEFT;
+    }
+
+    /**
+     * Resets the goToSleep counter to 0.
+     */
+    resetGoToSleep() {
+        this.goToSleep = 0;
+    }
+
+    /**
+     * Starts the sleep animation for the character.
+     */
+    startSleepAnimation() {
         setStoppableInterval(() => {
             this.goToSleep += 1;
             this.characterSleep();
         }, 1000);
-        // addInterval(sleepIntervalId); // Hinzufügen des Intervalls zum globalen Array
     }
 }
-
