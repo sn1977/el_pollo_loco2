@@ -230,7 +230,7 @@ class World {
         // Check if the "D" key is pressed, the character has bottles in inventory, and if enough time has passed since the last bottle throw
         if (this.keyboard.KEY_D && this.statusBarBottle.amountBottles > 0 && Date.now() - this.lastBottleThrowTime >= 1000) {
             // Creates a new ThrowableObject at the current position of the character
-            let bottle = new ThrowableObject(this.character.x + 70, this.character.y + 100);
+            let bottle = new ThrowableObject(this.character.x + 10, this.character.y + 100);
             this.throwableObjects.push(bottle);
             this.statusBarBottle.amountBottles -= 1;
             this.statusBarBottle.setAmountBottles(this.statusBarBottle.amountBottles);
