@@ -91,7 +91,7 @@ class MovableObject extends DrawableObject {
      * If energy reaches 0, the object is considered dead.
      */
     hit() {
-        this.energy -= 5;
+        this.energy -= 10;
         if (this.energy < 0) {
             this.energy = 0;
         } else {

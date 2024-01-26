@@ -138,6 +138,8 @@ class Character extends MovableObject {
      */
     isJumping = false;
 
+
+    jumpAnimationPlayed = false;
     /**
      * Object defining the character's hitbox offset.
      * @type {{top: number, left: number, right: number, bottom: number}}
@@ -212,7 +214,7 @@ class Character extends MovableObject {
         if (this.world.keyboard.SPACE && !this.isAboveGround() || this.world.keyboard.UP && !this.isAboveGround()) {
             this.jump();
             this.jumping_sound.play();
-            this.isJumping = true; // Setzen Sie isJumping auf true, um anzuzeigen, dass der Charakter springt
+            this.isJumping = true; // Set isJumping to true to indicate that the character is jumping
         }
         this.world.camera_x = -this.x + 100;
     }
@@ -232,7 +234,7 @@ class Character extends MovableObject {
     startStatusAnimation() {
         setStoppableInterval(() => {
             this.handleStatus();
-        }, 50);
+        }, 100);
     }
 
     /**

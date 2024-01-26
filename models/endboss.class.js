@@ -188,6 +188,6 @@ class Endboss extends MovableObject {
             } else if (!this.isDead) {
                 this.chasingCharacter();
             }
-        }, 200);
+        }, 100);
     }
 }
