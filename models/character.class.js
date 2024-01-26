@@ -138,8 +138,12 @@ class Character extends MovableObject {
      */
     isJumping = false;
 
+    /**
+     * Flag indicating whether the jump animation of the character is started.
+     * @type {boolean}
+     */
+    jumpAnimationStarted = false;
 
-    jumpAnimationPlayed = false;
     /**
      * Object defining the character's hitbox offset.
      * @type {{top: number, left: number, right: number, bottom: number}}
@@ -211,10 +215,11 @@ class Character extends MovableObject {
             this.otherDirection = true;
             this.playWalkingSound();
         }
-        if (this.world.keyboard.SPACE && !this.isAboveGround() || this.world.keyboard.UP && !this.isAboveGround()) {
+        if ((this.world.keyboard.SPACE || this.world.keyboard.UP) && !this.isAboveGround() && !this.jumpAnimationStarted) {
             this.jump();
             this.jumping_sound.play();
             this.isJumping = true; // Set isJumping to true to indicate that the character is jumping
+            this.jumpAnimationStarted = true;
         }
         this.world.camera_x = -this.x + 100;
     }
@@ -246,16 +251,29 @@ class Character extends MovableObject {
             this.resetGoToSleep();
         } else if (this.isDead()) {
             this.handleDeath();
-        } else {
-            if (this.isAboveGround() && this.isJumping) {
+        } else if (this.isAboveGround()) {
+            if (this.isJumping && this.jumpAnimationStarted) {
                 this.playAnimation(this.IMAGES_JUMPING);
-            } else if (this.isMoving()) {
+            }
+        } else {
+            this.resetJump();
+            if (this.isMoving()) {
                 this.playAnimation(this.IMAGES_WALKING);
                 this.resetGoToSleep();
             } else {
                 this.playAnimation(this.IMAGES_IDLE);
             }
         }
+    }
+
+    /**
+     * Resets the jump state of the character.
+     * This method should be called when the character has finished jumping and is back on the ground.
+     * It resets the flags controlling the jump animation to ensure that the animation can be triggered again for the next jump.
+     */
+    resetJump() {
+        this.isJumping = false;
+        this.jumpAnimationStarted = false;
     }
 
     /**
