@@ -119,7 +119,7 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_ATTACK);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
-        this.speed = 5;
+        this.speed = 10;
         this.x = 4600;
         this.animate();
     }
@@ -188,6 +188,6 @@ class Endboss extends MovableObject {
             } else if (!this.isDead) {
                 this.chasingCharacter();
             }
-        }, 100);
+        }, 80);
     }
 }
