@@ -220,6 +220,7 @@ class Character extends MovableObject {
             this.jumping_sound.play();
             this.isJumping = true; // Set isJumping to true to indicate that the character is jumping
             this.jumpAnimationStarted = true;
+            this.currentImage = 0;
         }
         this.world.camera_x = -this.x + 100;
     }
@@ -247,22 +248,51 @@ class Character extends MovableObject {
      */
     handleStatus() {
         if (this.isHurt()) {
-            this.playAnimation(this.IMAGES_HURT);
-            this.resetGoToSleep();
+            // Play the hurt animation if the character is hurt
+            this.playHurtAnimation();
         } else if (this.isDead()) {
+            // Handle character death
             this.handleDeath();
         } else if (this.isAboveGround()) {
-            if (this.isJumping && this.jumpAnimationStarted) {
+            // Handle jumping animations if the character is above ground
+            this.handleJumpingAnimation();
+        } else {
+            // Handle idle or walking animations if the character is on the ground
+            this.handleGroundedAnimation();
+        }
+    }
+
+    /**
+     * Plays the hurt animation and resets the sleep counter.
+     */
+    playHurtAnimation() {
+        this.playAnimation(this.IMAGES_HURT);
+        this.resetGoToSleep();
+    }
+
+    /**
+     * Handles the jumping animation. Only plays the jumping animation until all frames are shown.
+     */
+    handleJumpingAnimation() {
+        if (this.isJumping && this.jumpAnimationStarted) {
+            if (this.currentImage < this.IMAGES_JUMPING.length - 1) {
                 this.playAnimation(this.IMAGES_JUMPING);
             }
+            this.resetGoToSleep();
+        }
+    }
+
+    /**
+     * Handles the animations when the character is on the ground.
+     * This includes resetting the jump animation and playing either the idle or walking animation.
+     */
+    handleGroundedAnimation() {
+        this.resetJump();
+        if (this.isMoving()) {
+            this.playAnimation(this.IMAGES_WALKING);
+            this.resetGoToSleep();
         } else {
-            this.resetJump();
-            if (this.isMoving()) {
-                this.playAnimation(this.IMAGES_WALKING);
-                this.resetGoToSleep();
-            } else {
-                this.playAnimation(this.IMAGES_IDLE);
-            }
+            this.playAnimation(this.IMAGES_IDLE);
         }
     }
 
